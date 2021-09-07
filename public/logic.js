@@ -1,6 +1,13 @@
 let socket = io()
 let name = ""
 
+//enter click på tangerbordet för att skicka meddelande
+document.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        sendMessage()
+    }
+})
+
 window.onload = () => {
     name = prompt("Whats your name?")
 }
@@ -24,8 +31,4 @@ socket.on('disconnect', () => {
     let listItem = document.createElement("li")
     listItem.innerText = name + " user left"
     list.appendChild(listItem)
-})
-
-if(typing = true) {
-    console.log("type")
-}
+});
