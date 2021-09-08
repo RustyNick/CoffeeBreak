@@ -10,11 +10,12 @@ app.use(express.static('public'))
 
 io.on('connection', (socket) => {
 
-    socket.on('join', (incomning) => {
-        console.log('connected')
+
+    socket.on('join', (incoming) => {
+        console.log('connected', incoming.room)
         socket.id
-        socket.join(incomning.room)
-        io.to(incomning.room).emit('joined', { name: incomning.name })
+        socket.join(incoming.room)
+        io.to(incoming.room).emit('joined', { name: incoming.name })
     })
 
     socket.on("message", (incoming) => {
@@ -22,9 +23,9 @@ io.on('connection', (socket) => {
         io.emit('message', incoming)
     })
 
-    socket.on("disconnect", () => {
-        console.log("user disconnected")
-        io.emit("a user left")
+    socket.on("disconnect", (incoming) => {
+        console.log(incoming.name + " disconnected")
+        io.emit('disconnected', { name: incoming.name })
     })
 })
 

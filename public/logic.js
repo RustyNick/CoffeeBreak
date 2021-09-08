@@ -10,7 +10,7 @@ let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
 
 function hideFunc() {
-    showTyping.style.display = 'none' 
+    showTyping.style.display = 'none'
     clearTimeout(typingTimer)
 
 }
@@ -20,11 +20,11 @@ document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         sendMessage()
     }
-    
-    
+
+
     inputField.addEventListener('input', (e) => {
         showTyping.style.display = 'block'
-        setTimeout( () => {
+        setTimeout(() => {
             showTyping.style.display = 'none'
         }, 5000)
     })
@@ -36,8 +36,12 @@ window.onload = () => {
     socket.emit('join', { name, room: 'starship' })
 }
 
-socket.on('joined', (incomning) => {
-    console.log(incomning.name + " joined the room")
+socket.on('joined', (incoming) => {
+    console.log(incoming.name + " joined the room")
+    const list = document.getElementById("messages")
+    let listItem = document.createElement("li")
+    listItem.innerText = incoming.name + " joined"
+    list.appendChild(listItem)
 })
 
 socket.on('message', (incoming) => {
@@ -48,15 +52,17 @@ socket.on('message', (incoming) => {
 })
 
 function sendMessage() {
-    //let input = document.getElementById('message')
+    let input = document.getElementById('message')
     const message = input.value
     input.value = ""
     socket.emit('message', { name, message })
 }
 
-socket.on('disconnect', () => {
+socket.on('disconnected', (incoming) => {
+    console.log(incoming)
     const list = document.getElementById("messages")
     let listItem = document.createElement("li")
-    listItem.innerText = name + " user left"
+    listItem.innerText = incoming.name + " user disconnected"
     list.appendChild(listItem)
+    console.log("user disconnected")
 });
