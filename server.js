@@ -14,11 +14,11 @@ io.on('connection', (socket) => {
         console.log(incoming)
         io.emit('message', incoming)
     })
-    
+
     socket.on("disconnect", () => {
         console.log("user disconnected")
+        io.emit("a user left")
     })
 })
-
 
 http.listen(port, () => console.log("listening on port " + port))
