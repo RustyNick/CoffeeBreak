@@ -27,6 +27,15 @@ io.on('connection', (socket) => {
         console.log(incoming.name + " disconnected")
         io.emit('disconnected', { name: incoming.name })
     })
+
+        socket.on("message", (incoming) => {
+        //console.log(incoming)
+        io.emit('message', incoming)
+    })
+
+    socket.on('showTyping', (incoming) => {
+        io.emit('showTyping', incoming)
+    })
 })
 
 http.listen(port, () => console.log("listening on port " + port))

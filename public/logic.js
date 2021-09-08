@@ -1,5 +1,7 @@
 //const e = require("express")
 
+//const { emit } = require("nodemon")
+
 let socket = io()
 let name = ""
 let inputField = document.getElementById('message')
@@ -15,20 +17,23 @@ function hideFunc() {
 
 }
 
+    
 //enter click på tangerbordet för att skicka meddelande
 document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         sendMessage()
     }
-
-
-    inputField.addEventListener('input', (e) => {
-        showTyping.style.display = 'block'
-        setTimeout(() => {
-            showTyping.style.display = 'none'
-        }, 5000)
-    })
+    socket.emit('showTyping', { name })
 })
+
+socket.on('showTyping', (incoming) => {
+    showTyping.innerText = incoming.name + " is typing"
+    showTyping.style.display = 'block'
+    setTimeout(() => {
+        showTyping.style.display = 'none'
+    }, 5000)
+})
+
 
 window.onload = () => {
     name = prompt("Whats your name?")
