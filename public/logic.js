@@ -12,29 +12,24 @@ let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
 
 function hideFunc() {
-    showTyping.style.display = 'none' 
+    showTyping.style.display = 'none'
     clearTimeout(typingTimer)
 
 }
 
-//socket.on(() => {
-
-    //enter click på tangerbordet för att skicka meddelande
-    document.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            sendMessage()
-        }
-        
-        //emit to join on
-        //emit skickar till server, där ska meddelande med incoming.name tas emot för att sedan
-        //skicka tillbaka name för att på kliented renderas ut tillsammans med typing..
-        inputField.addEventListener('input', (e) => {
-            socket.emit('show', showTyping.style.display = 'block')
-            setTimeout( () => {
-                socket.emit(showTyping.style.display = 'none')
-            }, 5000)
-         })
     
+//enter click på tangerbordet för att skicka meddelande
+document.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        sendMessage()
+    }
+
+
+    inputField.addEventListener('input', (e) => {
+        showTyping.style.display = 'block'
+        setTimeout(() => {
+            showTyping.style.display = 'none'
+        }, 5000)
     })
 //})
 
@@ -49,7 +44,17 @@ socket.on(() => {
 
 window.onload = () => {
     name = prompt("Whats your name?")
+    const room = prompt("which room would you like to join?")
+    socket.emit('join', { name, room: 'starship' })
 }
+
+socket.on('joined', (incoming) => {
+    console.log(incoming.name + " joined the room")
+    const list = document.getElementById("messages")
+    let listItem = document.createElement("li")
+    listItem.innerText = incoming.name + " joined"
+    list.appendChild(listItem)
+})
 
 socket.on('message', (incoming) => {
     const list = document.getElementById("messages")
@@ -59,15 +64,17 @@ socket.on('message', (incoming) => {
 })
 
 function sendMessage() {
-    //let input = document.getElementById('message')
+    let input = document.getElementById('message')
     const message = input.value
     input.value = ""
     socket.emit('message', { name, message })
 }
 
-socket.on('disconnect', () => {
+socket.on('disconnected', (incoming) => {
+    console.log(incoming)
     const list = document.getElementById("messages")
     let listItem = document.createElement("li")
-    listItem.innerText = name + " user left"
+    listItem.innerText = incoming.name + " user disconnected"
     list.appendChild(listItem)
+    console.log("user disconnected")
 });
