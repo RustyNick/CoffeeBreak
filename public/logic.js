@@ -23,22 +23,15 @@ document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         sendMessage()
     }
+    socket.emit('showTyping', { name })
+})
 
-
-    inputField.addEventListener('input', (e) => {
-        showTyping.style.display = 'block'
-        setTimeout(() => {
-            showTyping.style.display = 'none'
-        }, 5000)
-    })
-//})
-
-socket.on(() => {
-        document.addEventListener('keypress', function (e) {
-        
-        socket.emit(showTyping.style.display = 'block')
-        
-        })
+socket.on('showTyping', (incoming) => {
+    showTyping.innerText = incoming.name + " is typing"
+    showTyping.style.display = 'block'
+    setTimeout(() => {
+        showTyping.style.display = 'none'
+    }, 5000)
 })
 
 
