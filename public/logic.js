@@ -10,7 +10,13 @@ document.addEventListener('keypress', function (e) {
 
 window.onload = () => {
     name = prompt("Whats your name?")
+    const room = prompt("which room would you like to join?")
+    socket.emit('join', { name, room: 'starship' })
 }
+
+socket.on('joined', (incomning) => {
+    console.log(incomning.name + " joined the room")
+})
 
 socket.on('message', (incoming) => {
     const list = document.getElementById("messages")

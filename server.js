@@ -10,6 +10,13 @@ app.use(express.static('public'))
 
 io.on('connection', (socket) => {
 
+    socket.on('join', (incomning) => {
+        console.log('connected')
+        socket.id
+        socket.join(incomning.room)
+        io.to(incomning.room).emit('joined', { name: incomning.name })
+    })
+
     socket.on("message", (incoming) => {
         console.log(incoming)
         io.emit('message', incoming)
