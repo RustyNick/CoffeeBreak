@@ -1,7 +1,3 @@
-//const e = require("express")
-
-//const { emit } = require("nodemon")
-
 let socket = io()
 let name = ""
 let inputField = document.getElementById('message')
@@ -11,13 +7,18 @@ let typingTimer
 let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
 
+window.onload = () => {
+    name = prompt("Whats your name?")
+    const room = prompt("which room would you like to join?")
+    socket.emit('new-user', { name })
+}
+
 function hideFunc() {
     showTyping.style.display = 'none'
     clearTimeout(typingTimer)
 
 }
 
-    
 //enter click på tangerbordet för att skicka meddelande
 document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
@@ -26,8 +27,8 @@ document.addEventListener('keypress', function (e) {
     socket.emit('showTyping', { name })
 })
 
-socket.on('showTyping', (incoming) => {
-    showTyping.innerText = incoming.name + " is typing"
+socket.on('showTyping', (name) => {
+    showTyping.innerText = name.name + " is typing"
     showTyping.style.display = 'block'
     setTimeout(() => {
         showTyping.style.display = 'none'
@@ -35,25 +36,16 @@ socket.on('showTyping', (incoming) => {
 })
 
 
-window.onload = () => {
-    name = prompt("Whats your name?")
-    const room = prompt("which room would you like to join?")
-    socket.emit('join', { name, room: 'starship' })
-}
-
-socket.on('joined', (incoming) => {
-    console.log(incoming.name + " joined the room")
-    const list = document.getElementById("messages")
-    let listItem = document.createElement("li")
-    listItem.innerText = incoming.name + " joined"
-    list.appendChild(listItem)
+socket.on('user-connected', ({ name }) => {
+    appendMessage(`${name}: joined chat`)
 })
 
-socket.on('message', (incoming) => {
-    const list = document.getElementById("messages")
-    let listItem = document.createElement("li")
-    listItem.innerText = incoming.name + ": " + incoming.message
-    list.appendChild(listItem)
+socket.on('user-disconnected', name => {
+    appendMessage(`${name.name}: disconnected`)
+});
+
+socket.on('message', name => {
+    appendMessage(`${name.name}: ${name.message}`)
 })
 
 function sendMessage() {
@@ -63,11 +55,9 @@ function sendMessage() {
     socket.emit('message', { name, message })
 }
 
-socket.on('disconnected', (incoming) => {
-    console.log(incoming)
+function appendMessage(message) {
     const list = document.getElementById("messages")
     let listItem = document.createElement("li")
-    listItem.innerText = incoming.name + " user disconnected"
+    listItem.innerText = message
     list.appendChild(listItem)
-    console.log("user disconnected")
-});
+}
