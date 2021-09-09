@@ -1,24 +1,44 @@
-//const e = require("express")
-
-//const { emit } = require("nodemon")
-
 let socket = io()
 let name = ""
 let inputField = document.getElementById('message')
-let inputTyping = inputField.value
-let typingTimer
 
 let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
 
-function hideFunc() {
-    showTyping.style.display = 'none'
-    clearTimeout(typingTimer)
 
+async function firstCommand () {
+
+    let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
+    let result = await response.json()
+    console.log("ingredients: " + result.drinks[0].strIngredient1 + ", " + result.drinks[0].strIngredient2 + ", " + result.drinks[0].strIngredient3 + ", " + result.drinks[0].strIngredient4)
+    await console.log(result.drinks[0].strInstructions)
 }
 
-    
-//enter click på tangerbordet för att skicka meddelande
+async function secondCommand () {
+
+    let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
+    let result = await response.json()
+    console.log("ingredients: " + result.drinks[4].strIngredient1 + ", " + result.drinks[0].strIngredient2 + ", " + result.drinks[0].strIngredient3 + ", " + result.drinks[0].strIngredient4 + ", " + result.drinks[0].strIngredient5 + ", " + result.drinks[0].strIngredient6)
+    await console.log(result.drinks[4].strInstructions)
+}
+
+async function thirdCommand () {
+    let response = await fetch("https://catfact.ninja/fact")
+    let result = await response.json()
+    console.log(result.fact)
+}
+
+function keyDownFunction() {
+    if ( inputField.value.includes("/margarita") == true) {
+        console.log("a message")
+        firstCommand()
+    } else if ( inputField.value.includes("/strawberry") == true ) {
+        secondCommand()
+    } else if ( inputField.value.includes("/cats") == true) {
+        thirdCommand()
+    }
+}
+
 document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         sendMessage()

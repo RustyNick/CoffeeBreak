@@ -17,10 +17,12 @@
 <body>
     <ul id="messages"></ul>
     <div class="inputContainer">
-        <input id="message" autocomplete="" type="text" />
+        <div class="infoContainer">
+            type: <br> "/margarita" for a drink recipe. <br> "/strawberry" to add strawberries <br> "/cats" to get a random fact about our furry feline friends
+        </div>
+        <input id="message" oninput="keyDownFunction()" autocomplete="" type="text" />
         <div id="showTyping"></div>
         <button onclick="sendMessage()">Send</button>
-        <button id="test" onclick="isTyping()">test</button>
     </div>
 </body>
 
