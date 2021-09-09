@@ -1,8 +1,6 @@
 let socket = io()
 let name = ""
 let inputField = document.getElementById('message')
-let inputTyping = inputField.value
-let typingTimer
 
 let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
@@ -16,10 +14,44 @@ window.onload = () => {
 function hideFunc() {
     showTyping.style.display = 'none'
     clearTimeout(typingTimer)
-
 }
 
-//enter click på tangerbordet för att skicka meddelande
+async function firstCommand () {
+
+    let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
+    let result = await response.json()
+    let ingredients = "ingredients: " + result.drinks[0].strIngredient1 + ", " + result.drinks[0].strIngredient2 + ", " + result.drinks[0].strIngredient3 + ", " + result.drinks[0].strIngredient4
+    let instruction = result.drinks[0].strInstructions
+    appendMessage(`${ingredients}`)
+    appendMessage(`${instruction}`)
+}
+
+async function secondCommand () {
+
+    let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
+    let result = await response.json()
+    let ingredients = "ingredients: " + result.drinks[4].strIngredient1 + ", " + result.drinks[0].strIngredient2 + ", " + result.drinks[0].strIngredient3 + ", " + result.drinks[0].strIngredient4 + ", " + result.drinks[0].strIngredient5 + ", " + result.drinks[0].strIngredient6
+    let instruction = result.drinks[4].strInstructions
+    appendMessage(`${ingredients}`)
+    appendMessage(`${instruction}`)
+}
+
+async function thirdCommand () {
+    let response = await fetch("https://catfact.ninja/fact")
+    let result = await response.json()
+    appendMessage(`${result.fact}`)
+}
+
+function keyDownFunction() {
+    if ( inputField.value.includes("/margarita") == true) {
+        firstCommand()
+    } else if ( inputField.value.includes("/strawberry") == true ) {
+        secondCommand()
+    } else if ( inputField.value.includes("/cats") == true) {
+        thirdCommand()
+    }
+}
+
 document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         sendMessage()
