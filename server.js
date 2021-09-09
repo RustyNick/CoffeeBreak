@@ -1,41 +1,38 @@
 const express = require('express')
 const app = express()
-const http = require('http').createServer(app)
-const io = require('socket.io')(http)
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
 
 const port = 3000
 
 app.use(express.static('public'))
 
 
+const users = {}
+
 io.on('connection', (socket) => {
-
-
-    socket.on('join', (incoming) => {
-        console.log('connected', incoming.room)
-        socket.id
-        socket.join(incoming.room)
-        io.to(incoming.room).emit('joined', { name: incoming.name })
+    socket.join('some room', () => {
+        io.to('some room').emit('some event');
     })
 
-    socket.on("message", (incoming) => {
-        console.log(incoming)
-        io.emit('message', incoming)
+    socket.on('new-user', name => {
+        users[socket.id] = name
+        io.emit('user-connected', name)
     })
 
-    socket.on("disconnect", (incoming) => {
-        console.log(incoming.name + " disconnected")
-        io.emit('disconnected', { name: incoming.name })
+    socket.on("disconnect", () => {
+        io.emit('user-disconnected', users[socket.id])
+        delete users[socket.id]
     })
 
-        socket.on("message", (incoming) => {
-        //console.log(incoming)
-        io.emit('message', incoming)
+    socket.on("message", (name) => {
+        io.emit('message', name)
     })
 
-    socket.on('showTyping', (incoming) => {
-        io.emit('showTyping', incoming)
+    socket.on('showTyping', (name) => {
+        io.emit('showTyping', name)
     })
+
 })
 
-http.listen(port, () => console.log("listening on port " + port))
+server.listen(port, () => console.log("listening on port " + port))
