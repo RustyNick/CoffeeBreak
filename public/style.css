@@ -8,6 +8,7 @@ body {
   font: 13px Helvetica, Arial;
 }
 
+
 .inputContainer {
   background: burlywood;
   padding: 3px;
@@ -32,13 +33,29 @@ body {
 #messages {
   list-style-type: none;
   margin: 0;
+  margin-bottom: 150px;
   padding: 0;
 }
 
 #messages li {
   padding: 5px 10px;
+  background: burlywood;
+  border-radius: 5px;
+  margin:5px 10px;
+  color:#3f3e38;
+
 }
 
 #messages li:nth-child(odd) {
-  background: gray;
+  background:#6f4e37;
+  border-radius: 5px;
+  color:#FFFDE4;
+}
+
+
+#messages p {
+  padding:10px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.5em;
+  font-weight: bold;
 }

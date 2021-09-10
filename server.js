@@ -8,16 +8,22 @@ const port = 3000
 app.use(express.static('public'))
 
 
-const users = {}
+const users = []
 
 io.on('connection', (socket) => {
-    socket.join('some room', () => {
-        io.to('some room').emit('some event');
+    socket.on('join', ({ name, room }) => {
+        io.to(room).emit('joined', { name })
     })
 
-    socket.on('new-user', name => {
-        users[socket.id] = name
-        io.emit('user-connected', name)
+    socket.on('new-user', ({ name, room }) => {
+        /* users[socket.id] = name */
+        const user = {
+            id: socket.id,
+            userName: name,
+            roomName: room
+        }
+        users.push(user)
+        io.emit('user-connected', user)
     })
 
     socket.on("disconnect", () => {
@@ -25,8 +31,9 @@ io.on('connection', (socket) => {
         delete users[socket.id]
     })
 
-    socket.on("message", (name) => {
-        io.emit('message', name)
+    socket.on("message", (msg) => {
+        console.log(msg)
+        io.emit('message', msg)
     })
 
     socket.on('showTyping', (name) => {
