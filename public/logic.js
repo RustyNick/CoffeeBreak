@@ -1,14 +1,16 @@
 let socket = io()
 let name = ""
+let room = ""
 let inputField = document.getElementById('message')
+let chatMessages = document.getElementById('messages')
 
 let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
 
 window.onload = () => {
     name = prompt("Whats your name?")
-    const room = prompt("which room would you like to join?")
-    socket.emit('new-user', { name })
+    room = prompt("which room would you like to join?")
+    socket.emit('new-user', { name, room })
 }
 
 function hideFunc() {
@@ -16,7 +18,7 @@ function hideFunc() {
     clearTimeout(typingTimer)
 }
 
-async function firstCommand () {
+async function firstCommand() {
 
     let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
     let result = await response.json()
@@ -26,7 +28,7 @@ async function firstCommand () {
     appendMessage(`${instruction}`)
 }
 
-async function secondCommand () {
+async function secondCommand() {
 
     let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
     let result = await response.json()
@@ -36,18 +38,18 @@ async function secondCommand () {
     appendMessage(`${instruction}`)
 }
 
-async function thirdCommand () {
+async function thirdCommand() {
     let response = await fetch("https://catfact.ninja/fact")
     let result = await response.json()
     appendMessage(`${result.fact}`)
 }
 
 function keyDownFunction() {
-    if ( inputField.value.includes("/margarita") == true) {
+    if (inputField.value.includes("/margarita") == true) {
         firstCommand()
-    } else if ( inputField.value.includes("/strawberry") == true ) {
+    } else if (inputField.value.includes("/strawberry") == true) {
         secondCommand()
-    } else if ( inputField.value.includes("/cats") == true) {
+    } else if (inputField.value.includes("/cats") == true) {
         thirdCommand()
     }
 }
@@ -68,16 +70,21 @@ socket.on('showTyping', (name) => {
 })
 
 
-socket.on('user-connected', ({ name }) => {
-    appendMessage(`${name}: joined chat`)
+socket.on('user-connected', (user) => {
+    console.log(user)
+    appendMessage(`${user.userName}: joined chat ${user.roomName}`)
 })
 
 socket.on('user-disconnected', name => {
     appendMessage(`${name.name}: disconnected`)
 });
 
-socket.on('message', name => {
-    appendMessage(`${name.name}: ${name.message}`)
+socket.on('message', (msg) => {
+    /* appendMessage(`${ name.message }`) */
+    console.log(msg)
+    appendMessage(`${msg.name}: ${msg.message}`)
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 })
 
 function sendMessage() {
@@ -85,11 +92,25 @@ function sendMessage() {
     const message = input.value
     input.value = ""
     socket.emit('message', { name, message })
+    input.focus()
 }
 
-function appendMessage(message) {
+/* function appendMessage(message) {
     const list = document.getElementById("messages")
     let listItem = document.createElement("li")
     listItem.innerText = message
     list.appendChild(listItem)
+} */
+
+function appendMessage(message) {
+    console.log(message)
+    const list = document.getElementById("messages")
+    let listItem = document.createElement("li")
+    let chatItem = document.createElement("div")
+    chatItem.innerHTML = `<span>USER</span> <span> sent 10: 25</span> <p>${message}</p>`
+    listItem.append(chatItem)
+    list.appendChild(listItem)
+}
+function getUser(id) {
+    return user.find(user => user.id === id)
 }

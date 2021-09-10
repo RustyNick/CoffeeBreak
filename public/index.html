@@ -15,12 +15,14 @@
 </head>
 
 <body>
-    <ul id="messages"></ul>
+    <!-- <ul id="messages"></ul> -->
+    <div id="messages"></div>
     <div class="inputContainer">
         <div class="infoContainer">
-            type: <br> "/margarita" for a drink recipe. <br> "/strawberry" to add strawberries <br> "/cats" to get a random fact about our furry feline friends
+            type: <br> "/margarita" for a drink recipe. <br> "/strawberry" to add strawberries <br> "/cats" to get a
+            random fact about our furry feline friends
         </div>
-        <input id="message" oninput="keyDownFunction()" autocomplete="" type="text" />
+        <input id="message" oninput="keyDownFunction()" autocomplete="" type="text" placeholder="type your message" />
         <div id="showTyping"></div>
         <button onclick="sendMessage()">Send</button>
     </div>

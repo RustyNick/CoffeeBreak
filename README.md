@@ -1,5 +1,6 @@
 # CoffeeBreak chatApplication
 An app where you can join rooms and chat with other clients
+
 # Description of assignemnt
 The student shall build a chat-app that allow the users to chat in real time.
 Socket Io shall be the building stone of the chat build and beyond that there shall be a command availabilty by typing "/"
