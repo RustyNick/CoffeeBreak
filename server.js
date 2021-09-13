@@ -7,13 +7,23 @@ const port = 3000
 
 app.use(express.static('public'))
 
+const chatBot = 'Barista Bot'
 
 const users = []
 
 io.on('connection', (socket) => {
-    socket.on('join', ({ name, room }) => {
-        io.to(room).emit('joined', { name })
+    socket.on('joinRoom', ({ userName, roomName }) => {
+        const user = userJoin(socket.id, userName, roomName);
+        console.log(user)
+
+
+        socket.join(user.roomName);
+
+        io.to(user.roomName)
+            .emit('')
+
     })
+
 
     socket.on('new-user', ({ name, room }) => {
         /* users[socket.id] = name */
@@ -27,8 +37,9 @@ io.on('connection', (socket) => {
     })
 
     socket.on("disconnect", () => {
-        io.emit('user-disconnected', users[socket.id])
+        io.emit('user-disconnected', users)
         delete users[socket.id]
+        //      users[socket.id].splice(0, 1)
     })
 
     socket.on("message", (msg) => {

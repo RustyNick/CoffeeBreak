@@ -11,6 +11,7 @@ window.onload = () => {
     name = prompt("Whats your name?")
     room = prompt("which room would you like to join?")
     socket.emit('new-user', { name, room })
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 function hideFunc() {
@@ -62,7 +63,7 @@ document.addEventListener('keypress', function (e) {
 })
 
 socket.on('showTyping', (name) => {
-    showTyping.innerText = name.name + " is typing"
+    showTyping.innerText = name.name + " is typing..."
     showTyping.style.display = 'block'
     setTimeout(() => {
         showTyping.style.display = 'none'
@@ -71,20 +72,19 @@ socket.on('showTyping', (name) => {
 
 
 socket.on('user-connected', (user) => {
-    console.log(user)
-    appendMessage(`${user.userName}: joined chat ${user.roomName}`)
+    appendMessage(`${user.userName} joined chat ${user.roomName}`)
 })
 
-socket.on('user-disconnected', name => {
-    appendMessage(`${name.name}: disconnected`)
+socket.on('user-disconnected', (user) => {
+    let username = user.userName
+    console.log(username)
+    appendMessage(`${username}: disconnected`)
 });
 
 socket.on('message', (msg) => {
-    /* appendMessage(`${ name.message }`) */
-    console.log(msg)
     appendMessage(`${msg.name}: ${msg.message}`)
 
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    window.scrollTo(0, document.body.scrollHeight);
 })
 
 function sendMessage() {
@@ -102,12 +102,30 @@ function sendMessage() {
     list.appendChild(listItem)
 } */
 
+function getDateAndTime() {
+    let dateTime = ""
+    let today = new Date();
+
+    let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+    if (today != today) {
+        dateTime = "sent" + date
+    } else {
+        dateTime = "Today at " + time
+    }
+
+    /* setTimeout(getDateAndTime, 1000); */
+    return dateTime
+}
+/* getDateAndTime() */
+
+
 function appendMessage(message) {
-    console.log(message)
     const list = document.getElementById("messages")
     let listItem = document.createElement("li")
     let chatItem = document.createElement("div")
-    chatItem.innerHTML = `<span>USER</span> <span> sent 10: 25</span> <p>${message}</p>`
+    chatItem.innerHTML = `<span> ${getDateAndTime()}</span > <p>${message}</p>`
     listItem.append(chatItem)
     list.appendChild(listItem)
 }
