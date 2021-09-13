@@ -1,16 +1,15 @@
 let socket = io()
 let name = ""
-let room = ""
 let inputField = document.getElementById('message')
-let chatMessages = document.getElementById('messages')
 
 let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
 
 window.onload = () => {
     name = prompt("Whats your name?")
-    room = prompt("which room would you like to join?")
-    socket.emit('new-user', { name, room })
+    const room = prompt("which room would you like to join?")
+    const data = {name, room}
+    socket.emit('new-user', data)
     window.scrollTo(0, document.body.scrollHeight);
 }
 
@@ -19,7 +18,7 @@ function hideFunc() {
     clearTimeout(typingTimer)
 }
 
-async function firstCommand() {
+async function firstCommand () {
 
     let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
     let result = await response.json()
@@ -29,7 +28,7 @@ async function firstCommand() {
     appendMessage(`${instruction}`)
 }
 
-async function secondCommand() {
+async function secondCommand () {
 
     let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
     let result = await response.json()
@@ -39,18 +38,18 @@ async function secondCommand() {
     appendMessage(`${instruction}`)
 }
 
-async function thirdCommand() {
+async function thirdCommand () {
     let response = await fetch("https://catfact.ninja/fact")
     let result = await response.json()
     appendMessage(`${result.fact}`)
 }
 
 function keyDownFunction() {
-    if (inputField.value.includes("/margarita") == true) {
+    if ( inputField.value.includes("/margarita") == true) {
         firstCommand()
-    } else if (inputField.value.includes("/strawberry") == true) {
+    } else if ( inputField.value.includes("/strawberry") == true ) {
         secondCommand()
-    } else if (inputField.value.includes("/cats") == true) {
+    } else if ( inputField.value.includes("/cats") == true) {
         thirdCommand()
     }
 }
@@ -59,31 +58,28 @@ document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         sendMessage()
     }
-    socket.emit('showTyping', { name })
+    socket.emit('showTyping', {name, room})
 })
 
-socket.on('showTyping', (name) => {
-    showTyping.innerText = name.name + " is typing..."
+socket.on('showTyping', (data) => {
+    console.log(data)
+    showTyping.innerText = data.name + " is typing"
     showTyping.style.display = 'block'
     setTimeout(() => {
         showTyping.style.display = 'none'
     }, 5000)
 })
 
-
-socket.on('user-connected', (user) => {
-    appendMessage(`${user.userName} joined chat ${user.roomName}`)
+socket.on('connected', (data) => {
+    appendMessage(`${data.name}: joined the room`)
 })
 
-socket.on('user-disconnected', (user) => {
-    let username = user.userName
-    console.log(username)
-    appendMessage(`${username}: disconnected`)
+socket.on('user-disconnected', data => {
+    appendMessage(`${data.name}: disconnected`)
 });
 
-socket.on('message', (msg) => {
-    appendMessage(`${msg.name}: ${msg.message}`)
-
+socket.on('message', data => {
+    appendMessage(`${data.name}: ${data.message}`)
     window.scrollTo(0, document.body.scrollHeight);
 })
 
@@ -92,15 +88,13 @@ function sendMessage() {
     const message = input.value
     input.value = ""
     socket.emit('message', { name, message })
-    input.focus()
 }
 
-/* function appendMessage(message) {
+function appendMessage(message) {
     const list = document.getElementById("messages")
     let listItem = document.createElement("li")
     listItem.innerText = message
-    list.appendChild(listItem)
-} */
+    }
 
 function getDateAndTime() {
     let dateTime = ""
@@ -128,7 +122,4 @@ function appendMessage(message) {
     chatItem.innerHTML = `<span> ${getDateAndTime()}</span > <p>${message}</p>`
     listItem.append(chatItem)
     list.appendChild(listItem)
-}
-function getUser(id) {
-    return user.find(user => user.id === id)
 }

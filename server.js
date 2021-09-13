@@ -7,49 +7,71 @@ const port = 3000
 
 app.use(express.static('public'))
 
-const chatBot = 'Barista Bot'
-
-const users = []
-
-io.on('connection', (socket) => {
-    socket.on('joinRoom', ({ userName, roomName }) => {
-        const user = userJoin(socket.id, userName, roomName);
-        console.log(user)
-
-
-        socket.join(user.roomName);
-
-        io.to(user.roomName)
-            .emit('')
-
-    })
-
-
-    socket.on('new-user', ({ name, room }) => {
-        /* users[socket.id] = name */
-        const user = {
-            id: socket.id,
-            userName: name,
-            roomName: room
-        }
-        users.push(user)
-        io.emit('user-connected', user)
-    })
-
-    socket.on("disconnect", () => {
-        io.emit('user-disconnected', users)
-        delete users[socket.id]
-        //      users[socket.id].splice(0, 1)
-    })
+const rooms = [
+    {
+        roomName: "starship",
+        password: "123321",
+        socketId: []
+    },
+    {
+        roomName: "a",
+        password: "123321",
+        socketId: []
+    }
+]
 
     socket.on("message", (msg) => {
         console.log(msg)
         io.emit('message', msg)
     })
+io.on('connection', (socket) => {
 
-    socket.on('showTyping', (name) => {
-        io.emit('showTyping', name)
+    socket.on('new-user', (data) => {
+
+        socket.join(data.room) 
+const chatBot = 'Barista Bot'
+
+const users = []
+
+        let name = socket.id
+        // const user = {
+        //     id: socket.id,
+        //     userName: data.name,
+        // }
+        let roomId = rooms.map((room) => {
+            if (room.roomName == data.room)
+            room.socketId.push(socket.id)
+        })
+        console.log(rooms.roomName, data.room)
+
+        //roomId.push(name)
+        io.to(data.room).emit('connected', data)
+        console.log(rooms)
+
+        socket.on("disconnect", () => {
+            io.to(data.room).emit('user-disconnected', data)
+            delete socket.id
+        })
+
+        socket.on("message", (data) => {
+            // let findId = users.findIndex(user => user.id == socket.id)
+    
+            // let theRoom = users[findId].roomName
+            
+            // let sameRoom = users.filter(user => user.roomName == theRoom)
+            // console.log(sameRoom)
+            
+            io.emit('message', data)
+
+        })
+
+        socket.on('showTyping', (data) => {
+            console.log(data + "rad 62")
+            io.to(data.room).emit('showTyping', data)
+        })
+
     })
+
 
 })
 
