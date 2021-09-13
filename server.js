@@ -1,4 +1,5 @@
 const express = require('express')
+const { REPL_MODE_SLOPPY } = require('repl')
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
@@ -10,12 +11,12 @@ app.use(express.static('public'))
 const rooms = [
     {
         roomName: "starship",
-        password: "123321",
+        password: "1234",
         socketId: []
     },
     {
         roomName: "a",
-        password: "123321",
+        password: "4321",
         socketId: []
     }
 ]
@@ -24,17 +25,45 @@ io.on('connection', (socket) => {
 
     socket.on('new-user', (data) => {
 
-        socket.join(data.room)
-        const chatBot = 'Barista Bot'
-
+        
         let name = socket.id
         // const user = {
-        //     id: socket.id,
-        //     userName: data.name,
-        // }
-        let roomId = rooms.map((room) => {
-            if (room.roomName == data.room)
+            //     id: socket.id,
+            //     userName: data.name,
+            // }
+            let roomId = rooms.map((room) => {
+                if(room.roomName == data.room && room.password != data.password){
+                    console.log("banan")
+                    io.emit("wrongPassword")
+                    return
+                } else if (room.roomName == data.room && room.password == data.password) {
+                socket.join(data.room) 
                 room.socketId.push(socket.id)
+            }  /* else {
+                rooms.push( {
+                    roomName: data.room,
+                    password: "",
+                    socketId: [ socket.id ]
+                }) 
+        }
+
+
+
+
+/* 
+            else if (room.roomName == data.room && roomName.password == data.password) {
+                room.socketId.push(socket.id)
+
+            } else if (room.roomName != data.room && roomName.password != data.password) {
+                alert("wrong password")
+                return
+            } else {
+                rooms.push( {
+                    roomName: data.room,
+                    password: "",
+                    socketId: [ socket.id ]
+                })
+            } */
         })
         console.log(rooms.roomName, data.room)
 
@@ -48,19 +77,12 @@ io.on('connection', (socket) => {
         })
 
         socket.on("message", (data) => {
-            // let findId = users.findIndex(user => user.id == socket.id)
-
-            // let theRoom = users[findId].roomName
-
-            // let sameRoom = users.filter(user => user.roomName == theRoom)
-            // console.log(sameRoom)
-
-            io.emit('message', data)
-
+            
+            io.to(data.room).emit('message', data)
+            console.log(rooms)
         })
 
         socket.on('showTyping', (data) => {
-            console.log(data + "rad 62")
             io.to(data.room).emit('showTyping', data)
         })
 
