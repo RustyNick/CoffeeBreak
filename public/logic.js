@@ -1,5 +1,7 @@
 let socket = io()
 let name = ""
+let room = ""
+let data = ""
 let inputField = document.getElementById('message')
 
 let typingContainer = document.getElementById(showTyping)
@@ -7,8 +9,9 @@ showTyping.style.display = "none"
 
 window.onload = () => {
     name = prompt("Whats your name?")
-    const room = prompt("which room would you like to join?")
-    const data = {name, room}
+    room = prompt("which room would you like to join?")
+    password = prompt("Enter password")
+    data = {name, room, password}
     socket.emit('new-user', data)
 }
 
@@ -85,7 +88,7 @@ function sendMessage() {
     let input = document.getElementById('message')
     const message = input.value
     input.value = ""
-    socket.emit('message', { name, message })
+    socket.emit('message', { name, message, room })
 }
 
 function appendMessage(message) {
@@ -94,3 +97,7 @@ function appendMessage(message) {
     listItem.innerText = message
     list.appendChild(listItem)
 }
+
+socket.on('wrongPassword', () => {
+    location.reload()
+})
