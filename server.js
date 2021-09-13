@@ -20,18 +20,12 @@ const rooms = [
     }
 ]
 
-    socket.on("message", (msg) => {
-        console.log(msg)
-        io.emit('message', msg)
-    })
 io.on('connection', (socket) => {
 
     socket.on('new-user', (data) => {
 
-        socket.join(data.room) 
-const chatBot = 'Barista Bot'
-
-const users = []
+        socket.join(data.room)
+        const chatBot = 'Barista Bot'
 
         let name = socket.id
         // const user = {
@@ -40,7 +34,7 @@ const users = []
         // }
         let roomId = rooms.map((room) => {
             if (room.roomName == data.room)
-            room.socketId.push(socket.id)
+                room.socketId.push(socket.id)
         })
         console.log(rooms.roomName, data.room)
 
@@ -55,12 +49,12 @@ const users = []
 
         socket.on("message", (data) => {
             // let findId = users.findIndex(user => user.id == socket.id)
-    
+
             // let theRoom = users[findId].roomName
-            
+
             // let sameRoom = users.filter(user => user.roomName == theRoom)
             // console.log(sameRoom)
-            
+
             io.emit('message', data)
 
         })
