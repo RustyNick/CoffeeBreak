@@ -7,38 +7,64 @@ const port = 3000
 
 app.use(express.static('public'))
 
-
-const users = []
+const rooms = [
+    {
+        roomName: "starship",
+        password: "123321",
+        socketId: []
+    },
+    {
+        roomName: "a",
+        password: "123321",
+        socketId: []
+    }
+]
 
 io.on('connection', (socket) => {
-    socket.on('join', ({ name, room }) => {
-        io.to(room).emit('joined', { name })
+
+    socket.on('new-user', (data) => {
+
+        socket.join(data.room) 
+
+        let name = socket.id
+        // const user = {
+        //     id: socket.id,
+        //     userName: data.name,
+        // }
+        let roomId = rooms.map((room) => {
+            if (room.roomName == data.room)
+            room.socketId.push(socket.id)
+        })
+        console.log(rooms.roomName, data.room)
+
+        //roomId.push(name)
+        io.to(data.room).emit('connected', data)
+        console.log(rooms)
+
+        socket.on("disconnect", () => {
+            io.to(data.room).emit('user-disconnected', data)
+            delete socket.id
+        })
+
+        socket.on("message", (data) => {
+            // let findId = users.findIndex(user => user.id == socket.id)
+    
+            // let theRoom = users[findId].roomName
+            
+            // let sameRoom = users.filter(user => user.roomName == theRoom)
+            // console.log(sameRoom)
+            
+            io.emit('message', data)
+
+        })
+
+        socket.on('showTyping', (data) => {
+            console.log(data + "rad 62")
+            io.to(data.room).emit('showTyping', data)
+        })
+
     })
 
-    socket.on('new-user', ({ name, room }) => {
-        /* users[socket.id] = name */
-        const user = {
-            id: socket.id,
-            userName: name,
-            roomName: room
-        }
-        users.push(user)
-        io.emit('user-connected', user)
-    })
-
-    socket.on("disconnect", () => {
-        io.emit('user-disconnected', users[socket.id])
-        delete users[socket.id]
-    })
-
-    socket.on("message", (msg) => {
-        console.log(msg)
-        io.emit('message', msg)
-    })
-
-    socket.on('showTyping', (name) => {
-        io.emit('showTyping', name)
-    })
 
 })
 
