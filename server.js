@@ -42,54 +42,27 @@ io.on('connection', (socket) => {
                         socket.join(data.room) 
                         room.socketId.push(socket.id)
                         io.to(room.roomName).emit("enterChat")
-                        return
+                        
                     } else {
-                        console.log("if  1")
-                        io.emit("wrongPassword")
-                        return
+                        socket.emit("wrongPassword")
                     }
 
-                } /* else if (room.roomName != data.room) {
-                    socket.emit("confirm")
-                } */ else {
-                    rooms.push( {
-                        roomName: data.room,
-                        password: data.password,
-                        socketId: [ socket.id ]
-                    })
-                    io.to(room.roomName).emit("enterChat") 
-                    return
+                } else {
+                    let roomCheck = rooms.find(room => room.roomName == data.room)
+                    if(roomCheck == undefined) {
+                        rooms.push( {
+                            roomName: data.room,
+                            password: data.password,
+                            socketId: [ socket.id ]
+                        })
+                    socket.join(data.room) 
+                    socket.emit("enterChat")
+                    }
                 }
-/*                 socket.on("new-room", (data) => {
-                    socket.join(data.room)
-                    io.to(room.roomName).emit("enterChat") 
-
-                }) */
-                console.log(rooms)  
-                
-
-
-/*                 if(room.roomName == data.room && room.password != data.password){
-                    console.log("if  1")
-                    io.emit("wrongPassword")
-                } else if (room.roomName == data.room && room.password == data.password) {
-                    console.log(" if 2")
-                socket.join(data.room) 
-                room.socketId.push(socket.id)
-                io.to(room.roomName).emit("enterChat")
-            } else if (room.roomName != data.room) {
-                console.log("if 3")
-                rooms.push( {
-                    roomName: data.room,
-                    password: data.password,
-                    socketId: [ socket.id ]
-                })  
-                return
-            } */
-        })
-
+            })
+            
+            console.log(rooms)
         
-
         //roomId.push(name)
         io.to(data.room).emit('connected', data)
 
@@ -99,7 +72,7 @@ io.on('connection', (socket) => {
         })
 
         socket.on("message", (data) => {
-            
+            console.log("message serverside")
             io.to(data.room).emit('message', data)
         })
 
