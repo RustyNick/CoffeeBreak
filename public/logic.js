@@ -28,7 +28,6 @@ function clearData () {
 function login() {
     collectData()
     socket.emit('new-user', data)
-   // clearData()
 }
 
 function showChat() {
@@ -36,7 +35,6 @@ function showChat() {
 }
 
 socket.on("enterChat", () => {
-    console.log("banan")
     showChat()
 })
 
@@ -111,7 +109,6 @@ socket.on('message', data => {
 })
 
 function sendMessage() {
-    console.log("sendMessage")
     let input = document.getElementById('message')
     const message = input.value
     input.value = ""
@@ -130,7 +127,6 @@ socket.on('wrongPassword', () => {
     location.reload()
     return
 })
-
 
 function newRoom() {
     socket.emit("new-room", data)

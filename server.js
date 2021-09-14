@@ -63,7 +63,6 @@ io.on('connection', (socket) => {
             
             console.log(rooms)
         
-
         //roomId.push(name)
         io.to(data.room).emit('connected', data)
 
