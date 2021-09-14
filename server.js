@@ -1,4 +1,5 @@
 const express = require('express')
+const { exit } = require('process')
 const { REPL_MODE_SLOPPY } = require('repl')
 const app = express()
 const server = require('http').createServer(app)
@@ -22,54 +23,75 @@ const rooms = [
 ]
 
 io.on('connection', (socket) => {
+    
+/*             socket.on('newRoom', (data) => {
+            rooms.push({
+                roomName: data.room,
+                password: data.password,
+                socketId: [ socket.id ]
+            })
+            console.log(rooms)
+            io.to(rooms.roomName).emit("enterChat")
+        }) */
 
     socket.on('new-user', (data) => {
-
         
-        let name = socket.id
-        // const user = {
-            //     id: socket.id,
-            //     userName: data.name,
-            // }
-            let roomId = rooms.map((room) => {
-                if(room.roomName == data.room && room.password != data.password){
-                    console.log("banan")
-                    io.emit("wrongPassword")
+            rooms.map((room) => {
+                if(room.roomName == data.room) {
+                    if(room.password == data.password) {
+                        socket.join(data.room) 
+                        room.socketId.push(socket.id)
+                        io.to(room.roomName).emit("enterChat")
+                        return
+                    } else {
+                        console.log("if  1")
+                        io.emit("wrongPassword")
+                        return
+                    }
+
+                } /* else if (room.roomName != data.room) {
+                    socket.emit("confirm")
+                } */ else {
+                    rooms.push( {
+                        roomName: data.room,
+                        password: data.password,
+                        socketId: [ socket.id ]
+                    })
+                    io.to(room.roomName).emit("enterChat") 
                     return
+                }
+/*                 socket.on("new-room", (data) => {
+                    socket.join(data.room)
+                    io.to(room.roomName).emit("enterChat") 
+
+                }) */
+                console.log(rooms)  
+                
+
+
+/*                 if(room.roomName == data.room && room.password != data.password){
+                    console.log("if  1")
+                    io.emit("wrongPassword")
                 } else if (room.roomName == data.room && room.password == data.password) {
+                    console.log(" if 2")
                 socket.join(data.room) 
                 room.socketId.push(socket.id)
-            }  /* else {
+                io.to(room.roomName).emit("enterChat")
+            } else if (room.roomName != data.room) {
+                console.log("if 3")
                 rooms.push( {
                     roomName: data.room,
-                    password: "",
+                    password: data.password,
                     socketId: [ socket.id ]
-                }) 
-        }
-
-
-
-
-/* 
-            else if (room.roomName == data.room && roomName.password == data.password) {
-                room.socketId.push(socket.id)
-
-            } else if (room.roomName != data.room && roomName.password != data.password) {
-                alert("wrong password")
+                })  
                 return
-            } else {
-                rooms.push( {
-                    roomName: data.room,
-                    password: "",
-                    socketId: [ socket.id ]
-                })
             } */
         })
-        console.log(rooms.roomName, data.room)
+
+        
 
         //roomId.push(name)
         io.to(data.room).emit('connected', data)
-        console.log(rooms)
 
         socket.on("disconnect", () => {
             io.to(data.room).emit('user-disconnected', data)
@@ -79,7 +101,6 @@ io.on('connection', (socket) => {
         socket.on("message", (data) => {
             
             io.to(data.room).emit('message', data)
-            console.log(rooms)
         })
 
         socket.on('showTyping', (data) => {

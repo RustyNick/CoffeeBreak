@@ -7,13 +7,37 @@ let inputField = document.getElementById('message')
 let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
 
-window.onload = () => {
-    name = prompt("Whats your name?")
-    room = prompt("which room would you like to join?")
-    password = prompt("Enter password")
+document.getElementById("loginBtn").addEventListener("click", login)
+
+function collectData () {
+    name = document.getElementById("inputName").value
+    room = document.getElementById("inputRoom").value
+    password = document.getElementById("inputPass").value
     data = {name, room, password}
-    socket.emit('new-user', data)
 }
+
+function clearData () {
+    name = document.getElementById("inputName").innerText = ""
+    room = document.getElementById("inputRoom").innerText = ""
+    password = document.getElementById("inputPass").innerText = ""
+}
+
+/* window.onload = () => {
+}
+ */
+function login() {
+    collectData()
+    socket.emit('new-user', data)
+    clearData()
+}
+
+function showChat() {
+    document.getElementById("loginBlock").style.display = "none"
+}
+
+socket.on("enterChat", () => {
+    showChat()
+})
 
 function hideFunc() {
     showTyping.style.display = 'none'
@@ -99,5 +123,22 @@ function appendMessage(message) {
 }
 
 socket.on('wrongPassword', () => {
-    location.reload()
+    alert("wrong password, try again")
+    return
 })
+
+socket.on("confirm", () => {
+    if (confirm('Are you sure you want to create a new room?')) {
+        newRoom()
+  // Save it!
+  console.log('Thing was saved to the database.');
+} else {
+    // Do nothing!
+    console.log('Thing was not saved to the database.');
+    location.reload()
+}
+})
+
+function newRoom() {
+    socket.emit("new-room", data)
+}
