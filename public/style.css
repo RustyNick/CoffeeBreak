@@ -5,8 +5,10 @@
 }
 
 body {
+  background-size: 100%, 100%;
+  background-repeat: no-repeat;
   font: 13px Helvetica, Arial;
-  background-color:whitesmoke;
+  background-color: whitesmoke;
 }
 
 .inputContainer {
@@ -15,7 +17,7 @@ body {
   width: 100%;
 }
 
-.Inputdesign{
+.Inputdesign {
   background: #6f4e37;
   padding: 5px;
   border-radius: 5px;
@@ -26,10 +28,9 @@ body {
   padding: 10px;
   width: 85%;
   margin-right: 0.5%;
-  color:whitesmoke;
+  color: whitesmoke;
   background: #6f4e37;
-  outline:none;
-
+  outline: none;
 }
 
 .Inputdesign button {
@@ -41,19 +42,20 @@ body {
   transition: 0.2s;
 }
 
-.Inputdesign button:hover{
+.Inputdesign button:hover {
   cursor: pointer;
-  background:burlywood;
-}
-.infoContainer{
-  padding: 3px;
   background: burlywood;
+}
+.infoContainer {
+  padding: 3px;
 }
 #messages {
   list-style-type: none;
+  height: 100%;
   margin: 0;
-  margin-bottom: 120px;
+  margin-bottom: 55px;
   padding: 0;
+  overflow: auto;
 }
 
 #messages li {
@@ -90,7 +92,25 @@ body {
   flex-direction: column;
   padding: 120px;
 }
-#showTyping{
-  padding:3px 10px;
+#showTyping {
+  padding: 3px 10px;
 }
+
+#commands {
+  width: 50%;
+  border-radius: 5px;
+  padding: 5px;
+  background: burlywood;
+  display: none;
+  margin-bottom: 5px;
+}
+
+#background {
+  position: fixed;
+  z-index: 0;
+  object-fit: cover;
+}
+img {
+  height: 100%;
+  width: 100%;
 }

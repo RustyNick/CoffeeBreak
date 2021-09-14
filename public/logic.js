@@ -70,20 +70,28 @@ async function thirdCommand() {
 }
 
 function keyDownFunction() {
-    if (inputField.value.includes("/margarita") == true) {
-        firstCommand()
-    } else if (inputField.value.includes("/strawberry") == true) {
-        secondCommand()
-    } else if (inputField.value.includes("/cats") == true) {
-        thirdCommand()
+
+    socket.emit('showTyping', { name, room })
+    if (inputField.value.includes("/") == true) {
+        document.getElementById("commands").style.display = "block"
+    } else {
+        document.getElementById("commands").style.display = "none"
+
     }
+
+        if (inputField.value.includes("/margarita") == true) {
+            firstCommand()
+        } else if (inputField.value.includes("/strawberry") == true) {
+            secondCommand()
+        } else if (inputField.value.includes("/cats") == true) {
+            thirdCommand()
+        }
 }
 
 document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         sendMessage()
     }
-    socket.emit('showTyping', { name, room })
 })
 
 socket.on('showTyping', (data) => {
@@ -106,7 +114,6 @@ socket.on('user-disconnected', data => {
 socket.on('message', data => {
     appendMessage(`${data.name}: ${data.message}`)
     console.log(data)
-    window.scrollTo(0, document.body.scrollHeight);
 })
 
 function sendMessage() {
@@ -148,6 +155,7 @@ function appendMessage(message) {
     chatItem.innerHTML = `<span> ${getDateAndTime()}</span > <p>${message}</p>`
     listItem.append(chatItem)
     list.appendChild(listItem)
+    window.scrollTo(0, document.body.scrollHeight)
 }
 
 socket.on('wrongPassword', () => {
