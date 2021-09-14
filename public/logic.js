@@ -28,7 +28,7 @@ function clearData () {
 function login() {
     collectData()
     socket.emit('new-user', data)
-    clearData()
+   // clearData()
 }
 
 function showChat() {
@@ -36,6 +36,7 @@ function showChat() {
 }
 
 socket.on("enterChat", () => {
+    console.log("banan")
     showChat()
 })
 
@@ -106,9 +107,11 @@ socket.on('user-disconnected', data => {
 
 socket.on('message', data => {
     appendMessage(`${data.name}: ${data.message}`)
+    console.log(data)
 })
 
 function sendMessage() {
+    console.log("sendMessage")
     let input = document.getElementById('message')
     const message = input.value
     input.value = ""
@@ -124,20 +127,10 @@ function appendMessage(message) {
 
 socket.on('wrongPassword', () => {
     alert("wrong password, try again")
+    location.reload()
     return
 })
 
-socket.on("confirm", () => {
-    if (confirm('Are you sure you want to create a new room?')) {
-        newRoom()
-  // Save it!
-  console.log('Thing was saved to the database.');
-} else {
-    // Do nothing!
-    console.log('Thing was not saved to the database.');
-    location.reload()
-}
-})
 
 function newRoom() {
     socket.emit("new-room", data)
