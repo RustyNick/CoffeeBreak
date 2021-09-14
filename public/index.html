@@ -24,16 +24,26 @@
         <button id="loginBtn">submit</button>
     </div>
     <!-- <ul id="messages"></ul> -->
-    <div id="messages"></div>
-    <div class="inputContainer">
-        <div class="infoContainer">
-            type: <br> "/margarita" for a drink recipe. <br> "/strawberry" to add strawberries <br> "/cats" to get a
-            random fact about our furry feline friends
+
+
+
+    <div>
+        <div id="messages"></div>
+        <div class="inputContainer">
+            <div id="showTyping"></div>
+            <div class="infoContainer">
+                type: <br> "/margarita" for a drink recipe. <br> "/strawberry" to add strawberries <br> "/cats" to
+                get a
+                random fact about our furry feline friends
+                <div class="Inputdesign">
+                    <input id="message" oninput="keyDownFunction()" autocomplete="" type="text"
+                        placeholder="type your message" />
+                    <button onClick="sendMessage()">Send</button>
+                </div>
+            </div>
         </div>
-        <input id="message" onInput="keyDownFunction()" autocomplete="" type="text" placeholder="type your message" />
-        <div id="showTyping"></div>
-        <button onClick="sendMessage()">Send</button>
     </div>
+
 </body>
 
 </html>

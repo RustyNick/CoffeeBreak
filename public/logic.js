@@ -9,14 +9,14 @@ showTyping.style.display = "none"
 
 document.getElementById("loginBtn").addEventListener("click", login)
 
-function collectData () {
+function collectData() {
     name = document.getElementById("inputName").value
     room = document.getElementById("inputRoom").value
     password = document.getElementById("inputPass").value
-    data = {name, room, password}
+    data = { name, room, password }
 }
 
-function clearData () {
+function clearData() {
     name = document.getElementById("inputName").innerText = ""
     room = document.getElementById("inputRoom").innerText = ""
     password = document.getElementById("inputPass").innerText = ""
@@ -43,7 +43,7 @@ function hideFunc() {
     clearTimeout(typingTimer)
 }
 
-async function firstCommand () {
+async function firstCommand() {
 
     let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
     let result = await response.json()
@@ -53,7 +53,7 @@ async function firstCommand () {
     appendMessage(`${instruction}`)
 }
 
-async function secondCommand () {
+async function secondCommand() {
 
     let response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita")
     let result = await response.json()
@@ -63,18 +63,18 @@ async function secondCommand () {
     appendMessage(`${instruction}`)
 }
 
-async function thirdCommand () {
+async function thirdCommand() {
     let response = await fetch("https://catfact.ninja/fact")
     let result = await response.json()
     appendMessage(`${result.fact}`)
 }
 
 function keyDownFunction() {
-    if ( inputField.value.includes("/margarita") == true) {
+    if (inputField.value.includes("/margarita") == true) {
         firstCommand()
-    } else if ( inputField.value.includes("/strawberry") == true ) {
+    } else if (inputField.value.includes("/strawberry") == true) {
         secondCommand()
-    } else if ( inputField.value.includes("/cats") == true) {
+    } else if (inputField.value.includes("/cats") == true) {
         thirdCommand()
     }
 }
@@ -83,7 +83,7 @@ document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         sendMessage()
     }
-    socket.emit('showTyping', {name, room})
+    socket.emit('showTyping', { name, room })
 })
 
 socket.on('showTyping', (data) => {
@@ -106,6 +106,7 @@ socket.on('user-disconnected', data => {
 socket.on('message', data => {
     appendMessage(`${data.name}: ${data.message}`)
     console.log(data)
+    window.scrollTo(0, document.body.scrollHeight);
 })
 
 function sendMessage() {
@@ -119,6 +120,33 @@ function appendMessage(message) {
     const list = document.getElementById("messages")
     let listItem = document.createElement("li")
     listItem.innerText = message
+}
+
+function getDateAndTime() {
+    let dateTime = ""
+    let today = new Date();
+
+    let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+    if (today != today) {
+        dateTime = "sent" + date
+    } else {
+        dateTime = "Today at " + time
+    }
+
+    /* setTimeout(getDateAndTime, 1000); */
+    return dateTime
+}
+/* getDateAndTime() */
+
+
+function appendMessage(message) {
+    const list = document.getElementById("messages")
+    let listItem = document.createElement("li")
+    let chatItem = document.createElement("div")
+    chatItem.innerHTML = `<span> ${getDateAndTime()}</span > <p>${message}</p>`
+    listItem.append(chatItem)
     list.appendChild(listItem)
 }
 
