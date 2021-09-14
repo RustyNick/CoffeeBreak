@@ -28,7 +28,6 @@ function clearData() {
 function login() {
     collectData()
     socket.emit('new-user', data)
-    clearData()
 }
 
 function showChat() {
