@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoffeeBreak</title>
-
+    <script src="https://kit.fontawesome.com/2b61802b5a.js" crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script defer src="./logic.js"></script>
 
@@ -15,33 +15,47 @@
 </head>
 
 <body>
+
+
     <div id="loginBlock" class="login">
-        <h3>lista med rum <br>
-        join a room or create a new one</h3>
-        <input id="inputName" placeholder="Username" type="text">
-        <input id="inputRoom" placeholder="Room to join" type="text">
-        <input id="inputPass" placeholder="Password" type="text">
-        <button id="loginBtn">submit</button>
+        <div id="logo"><img src="./resources/CoffeeBreak.png" alt="CoffeeBreak"></div>
+        <video autoplay muted loop preload="true">
+            <source src="./resources/pexels-jack-sparrow-5977124.mp4" type="video/mp4" />
+        </video>
+
+        <div class="loginstyle">
+            <h3>lista med rum <br>
+                join a room or create a new one
+            </h3>
+            <input id="inputName" placeholder="Username" type="text">
+            <input id="inputRoom" placeholder="Room to join" type="text">
+            <input id="inputPass" placeholder="Password" type="text">
+            <button id="loginBtn">Join chat</i></button>
+        </div>
     </div>
     <!-- <ul id="messages"></ul> -->
+    <div class="chatBlock">
 
-    <div>
-        <div id="messages"></div>
+        <div>
+            <div id="messages"></div>
 
-        <div class="inputContainer">
-            <div id="showTyping"></div>
-            <div class="infoContainer">
-                <div id="commands">
-                    type: <br> "/margarita" for a drink recipe. <br> "/strawberry" to add strawberries <br> "/cats" to
-                    get a
-                    random fact about our furry feline friends
-                </div>
-                <div class="Inputdesign">
-                    <input id="message" oninput="keyDownFunction()" autocomplete="" type="text"
-                        placeholder="type your message" />
-                    <button onClick="sendMessage()">Send</button>
+            <div class="inputContainer">
+                <div id="showTyping"></div>
+                <div class="infoContainer">
+                    <div id="commands">
+                        type: <br> "/margarita" for a drink recipe. <br> "/strawberry" to add strawberries <br> "/cats"
+                        to
+                        get a
+                        random fact about our furry feline friends
+                    </div>
+                    <div class="Inputdesign">
+                        <input id="message" oninput="keyDownFunction()" autocomplete="" type="text"
+                            placeholder="type your message" />
+                        <button onClick="sendMessage()">Send</button>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 

@@ -8,11 +8,26 @@ let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
 
 document.getElementById("loginBtn").addEventListener("click", login)
+document.getElementById('loginBtn').addEventListener('mouseenter', () => {
+
+    let btn = document.getElementById('loginBtn')
+    btn.style.transition = "0.5s"
+    btn.innerHTML = `<i class="far fa-comments"></i>`
+
+})
+document.getElementById('loginBtn').addEventListener('mouseleave', () => {
+
+    let btn = document.getElementById('loginBtn')
+    btn.style.transition = "0.5s"
+    btn.innerHTML = `Join Chat`
+
+})
 
 function collectData() {
     name = document.getElementById("inputName").value
     room = document.getElementById("inputRoom").value
     password = document.getElementById("inputPass").value
+
     data = { name, room, password }
 }
 
@@ -27,7 +42,12 @@ function clearData() {
  */
 function login() {
     collectData()
-    socket.emit('new-user', data)
+    if (data.name == "" || data.room == "" || data.password == "") {
+        alert("You have to enter a name and a room")
+        return
+    } else {
+        socket.emit('new-user', data)
+    }
 }
 
 function showChat() {
@@ -69,6 +89,13 @@ async function thirdCommand() {
     appendMessage(`${result.fact}`)
 }
 
+async function fourthCommand() {
+    let response = await fetch("https://api.sampleapis.com/coffee/hot")
+    let result = await response.json()
+    let randomNumber = Math.floor(Math.random() * 19) + 1;
+    socket.emit('message', result[randomNumber])
+}
+
 function keyDownFunction() {
 
     socket.emit('showTyping', { name, room })
@@ -79,13 +106,15 @@ function keyDownFunction() {
 
     }
 
-        if (inputField.value.includes("/margarita") == true) {
-            firstCommand()
-        } else if (inputField.value.includes("/strawberry") == true) {
-            secondCommand()
-        } else if (inputField.value.includes("/cats") == true) {
-            thirdCommand()
-        }
+    if (inputField.value.includes("/margarita") == true) {
+        firstCommand()
+    } else if (inputField.value.includes("/strawberry") == true) {
+        secondCommand()
+    } else if (inputField.value.includes("/cats") == true) {
+        thirdCommand()
+    } else if (inputField.value.includes("/coffee") == true) {
+        fourthCommand()
+    }
 }
 
 document.addEventListener('keypress', function (e) {
@@ -95,8 +124,7 @@ document.addEventListener('keypress', function (e) {
 })
 
 socket.on('showTyping', (data) => {
-    console.log(data)
-    showTyping.innerText = data.name + " is typing"
+    showTyping.innerText = data.name + " is typing..."
     showTyping.style.display = 'block'
     setTimeout(() => {
         showTyping.style.display = 'none'
@@ -113,7 +141,6 @@ socket.on('user-disconnected', data => {
 
 socket.on('message', data => {
     appendMessage(`${data.name}: ${data.message}`)
-    console.log(data)
 })
 
 function sendMessage() {
@@ -121,12 +148,6 @@ function sendMessage() {
     const message = input.value
     input.value = ""
     socket.emit('message', { name, message, room })
-}
-
-function appendMessage(message) {
-    const list = document.getElementById("messages")
-    let listItem = document.createElement("li")
-    listItem.innerText = message
 }
 
 function getDateAndTime() {
@@ -152,7 +173,21 @@ function appendMessage(message) {
     const list = document.getElementById("messages")
     let listItem = document.createElement("li")
     let chatItem = document.createElement("div")
+    chatItem.style.width = "100%"
     chatItem.innerHTML = `<span> ${getDateAndTime()}</span > <p>${message}</p>`
+    listItem.append(chatItem)
+    list.appendChild(listItem)
+    window.scrollTo(0, document.body.scrollHeight)
+}
+
+function appendBotMessage(message) {
+    const list = document.getElementById("messages")
+    let listItem = document.createElement("li")
+    listItem.style.backgroundColor = "#a3937a"
+    listItem.style.color = "#edd2a8"
+    let chatItem = document.createElement("div")
+    chatItem.style.width = "100%"
+    chatItem.innerHTML = `<span>BaristaBot</span><span> ${getDateAndTime()}</span > <p>${message}</p>`
     listItem.append(chatItem)
     list.appendChild(listItem)
     window.scrollTo(0, document.body.scrollHeight)
