@@ -140,7 +140,7 @@ select {
   border: none;
 }
 
-.loginstyle button {
+.loginstyle button, #exitList {
   font-size: 2em;
   padding: 5px;
   margin: 5px 0px;
@@ -149,7 +149,7 @@ select {
   border: none;
 }
 
-.loginstyle button:hover {
+.loginstyle button:hover, #exitList:hover {
   background-color: #6f4e37;
   border-radius: 15px;
   cursor: pointer;
@@ -167,10 +167,21 @@ select {
   color: #fffde4;
   text-align: center;
   max-width: 50%;
-  min-width: 280px;
+  min-width: 320px;
 }
 #roomName {
   padding: 0px 20px;
+}
+#checkUser{
+  font-size:24px;
+  background-color:#6f4e37;
+  color:#fffde4;
+  border:none;
+  padding:5px;
+}
+#checkUser:hover{
+  background-color:#fffde4;
+  color:#6f4e37;
 }
 #signout {
   color: #fffde4;
@@ -208,8 +219,33 @@ img {
 }
 
 #membersContainer {
-  position: absolute;
+  padding:2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index:1;
   background: white;
-  top: 50vh;
-  left: 50vw;
+  top:100px;
+  left:47%;
+  animation-name: move;
+  animation-duration: 0.5s;
+  border-radius: 5px;
 }
+
+
+.moveback{
+  animation-name:moveBack;
+  animation-duration: 0.5s;
+}
+@keyframes move {
+  0%   {top:-50%;}
+  100% {top:100px;}
+}
+
+@keyframes moveBack {
+  0%   {top:100px;}
+  100% {top:-50%;}
+}
+

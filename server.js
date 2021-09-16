@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
                 if (room.password == data.password) {
                     socket.join(data.room)
                     console.log(data.name)
-                    room.socketId.push({"userId": socket.id, "user": data.name})
+                    room.socketId.push({ "userId": socket.id, "user": data.name })
                     io.to(room.roomName).emit("enterChat", room.roomName)
 
                 } else {
@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
                     rooms.push({
                         roomName: data.room,
                         password: data.password,
-                        socketId: [socket.id]
+                        socketId: [{ "userId": socket.id, "user": data.name }]
                     })
                     socket.join(data.room)
                     socket.emit("enterChat")
@@ -55,11 +55,11 @@ io.on('connection', (socket) => {
             io.to(data.room).emit('user-disconnected', data)
             let roomCheck = rooms.findIndex(room => room.roomName == data.room)
             let userCheck = rooms.findIndex(user => user.userName == data.user)
-            
+
             let room = rooms[roomCheck]
-            
+
             console.log("lsit after disconnect" + rooms)
-            rooms[roomCheck].socketId.splice( 0, 1)
+            rooms[roomCheck].socketId.splice(0, 1)
             delete socket.id
         })
 
