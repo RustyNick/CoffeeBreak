@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoffeeBreak</title>
-    <script src="https://kit.fontawesome.com/2b61802b5a.js" crossorigin="anonymous"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script defer src="https://kit.fontawesome.com/2b61802b5a.js" crossorigin="anonymous"></script>
+    <script defer src="/socket.io/socket.io.js"></script>
     <script defer src="./logic.js"></script>
 
     <link rel="stylesheet" href="style.css">
@@ -24,29 +24,36 @@
         </video>
 
         <div class="loginstyle">
-            <h3>lista med rum <br>
-                join a room or create a new one
-            </h3>
             <input id="inputName" placeholder="Username" type="text">
-            <input id="inputRoom" placeholder="Room to join" type="text">
-            <input id="inputPass" placeholder="Password" type="text">
+            <div id="roomDiv"></div>
+            <input id="inputPass" type="password" placeholder="Password" type="text">
             <button id="loginBtn">Join chat</i></button>
         </div>
     </div>
     <!-- <ul id="messages"></ul> -->
     <div class="chatBlock">
 
-        <div>
+        <div class="center">
+            <div class="topBanner">
+
+                <div id="roomName">
+
+                </div>
+                <a id="signout" href="http://localhost:3000"><i class="fas fa-door-closed"></i></a>
+            </div>
             <div id="messages"></div>
 
             <div class="inputContainer">
                 <div id="showTyping"></div>
                 <div class="infoContainer">
                     <div id="commands">
-                        type: <br> "/margarita" for a drink recipe. <br> "/strawberry" to add strawberries <br> "/cats"
+                        Commands: <br> "/margarita" for a drink recipe. <br> "/strawberry" to add strawberries
+                        <br> "/cats"
                         to
                         get a
                         random fact about our furry feline friends
+                        <br>
+                        "/coffee" random coffee drink
                     </div>
                     <div class="Inputdesign">
                         <input id="message" oninput="keyDownFunction()" autocomplete="" type="text"
