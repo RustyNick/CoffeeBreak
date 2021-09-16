@@ -10,7 +10,6 @@ showTyping.style.display = "none"
 
 window.onload = () => {
     appendJoinRoomInput()
-
 }
 
 document.getElementById("loginBtn").addEventListener("click", login)
@@ -44,6 +43,45 @@ document.getElementById('signout').addEventListener('mouseleave', () => {
 
 })
 
+document.getElementById("test").addEventListener("click", activeUsers)
+
+function activeUsers() {
+    
+    if (document.getElementById("membersContainer") != undefined) {
+        document.getElementById("membersContainer").remove()
+        let membersContainer = document.createElement("div")
+        membersContainer.id = "membersContainer"
+        let list = document.createElement("p")
+        socket.emit("activeUsers", room)
+        membersContainer.appendChild(list)
+        document.getElementById("body").appendChild(membersContainer)
+    } else {
+        let membersContainer = document.createElement("div")
+        membersContainer.id = "membersContainer"
+        let list = document.createElement("p")
+        socket.emit("activeUsers", room)
+        membersContainer.appendChild(list)
+        document.getElementById("body").appendChild(membersContainer)
+    }
+}
+
+
+socket.on("activeUsers", (data) => {
+    document.getElementById("membersContainer")
+    
+    let users = data.map((user) => {
+        console.log(user.user)
+        
+        let p = document.createElement("p")
+        p.innerText = user.user
+        document.getElementById("membersContainer").appendChild(p)
+        
+    })
+
+    console.log(data)
+})
+
+
 function collectData() {
     name = document.getElementById("inputName").value
     room = document.getElementById("roomInput").value
@@ -59,9 +97,6 @@ function clearData() {
     password = document.getElementById("inputPass").innerText = ""
 }
 
-/* window.onload = () => {
-}
- */
 function login() {
     collectData()
     if (data.name == "" || data.room == "" || data.password == "") {
@@ -92,8 +127,6 @@ async function firstCommand() {
     let result = await response.json()
     let ingredients = "ingredients: " + result.drinks[0].strIngredient1 + ", " + result.drinks[0].strIngredient2 + ", " + result.drinks[0].strIngredient3 + ", " + result.drinks[0].strIngredient4
     let instruction = result.drinks[0].strInstructions
-    /*     appendMessage(`${ingredients}`)
-        appendMessage(`${instruction}`) */
     let cmd = ingredients + instruction
     let number = "1"
     socket.emit('cmdMessage', { number, room, cmd })
@@ -105,8 +138,6 @@ async function secondCommand() {
     let result = await response.json()
     let ingredients = "ingredients: " + result.drinks[4].strIngredient1 + ", " + result.drinks[0].strIngredient2 + ", " + result.drinks[0].strIngredient3 + ", " + result.drinks[0].strIngredient4 + ", " + result.drinks[0].strIngredient5 + ", " + result.drinks[0].strIngredient6
     let instruction = result.drinks[4].strInstructions
-    /*     appendMessage(`${ingredients}`)
-        appendMessage(`${instruction}`) */
     let cmd = ingredients + instruction
     let number = "2"
     socket.emit('cmdMessage', { number, room, cmd })
@@ -116,7 +147,6 @@ async function thirdCommand() {
     let response = await fetch("https://catfact.ninja/fact")
     let result = await response.json()
     let cmd = result.fact
-    //appendMessage(`${result.fact}`)
     let number = "3"
     socket.emit('cmdMessage', { number, room, cmd })
 }
@@ -143,9 +173,6 @@ function keyDownFunction() {
 
     }
 
-    /*     if (inputField.value.includes("/margarita") == true) {
-            firstCommand()
-        } */
 }
 
 function appendCreateRoomInput() {

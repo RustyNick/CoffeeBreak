@@ -1,7 +1,4 @@
-const { on } = require('events')
 const express = require('express')
-const { exit } = require('process')
-const { REPL_MODE_SLOPPY } = require('repl')
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
@@ -25,23 +22,14 @@ const rooms = [
 
 io.on('connection', (socket) => {
 
-    /*             socket.on('newRoom', (data) => {
-                rooms.push({
-                    roomName: data.room,
-                    password: data.password,
-                    socketId: [ socket.id ]
-                })
-                console.log(rooms)
-                io.to(rooms.roomName).emit("enterChat")
-            }) */
-
     socket.on('new-user', (data) => {
 
         rooms.map((room) => {
             if (room.roomName == data.room) {
                 if (room.password == data.password) {
                     socket.join(data.room)
-                    room.socketId.push(socket.id)
+                    console.log(data.name)
+                    room.socketId.push({"userId": socket.id, "user": data.name})
                     io.to(room.roomName).emit("enterChat", room.roomName)
 
                 } else {
@@ -65,6 +53,13 @@ io.on('connection', (socket) => {
 
         socket.on("disconnect", () => {
             io.to(data.room).emit('user-disconnected', data)
+            let roomCheck = rooms.findIndex(room => room.roomName == data.room)
+            let userCheck = rooms.findIndex(user => user.userName == data.user)
+            
+            let room = rooms[roomCheck]
+            
+            console.log("lsit after disconnect" + rooms)
+            rooms[roomCheck].socketId.splice( 0, 1)
             delete socket.id
         })
 
@@ -79,6 +74,14 @@ io.on('connection', (socket) => {
 
         socket.on('showTyping', (data) => {
             io.to(data.room).emit('showTyping', data)
+        })
+
+        socket.on("activeUsers", (data) => {
+            let roomCheck = rooms.findIndex(rooms => rooms.roomName == data)
+            let userList = rooms[roomCheck].socketId
+            console.log(userList)
+
+            socket.emit("activeUsers", userList)
         })
 
 
