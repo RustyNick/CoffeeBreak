@@ -43,24 +43,26 @@ document.getElementById('signout').addEventListener('mouseleave', () => {
 
 })
 
-document.getElementById("test").addEventListener("click", activeUsers)
+document.getElementById("checkUser").addEventListener("click", activeUsers)
 
 function activeUsers() {
-    
+
     if (document.getElementById("membersContainer") != undefined) {
         document.getElementById("membersContainer").remove()
         let membersContainer = document.createElement("div")
         membersContainer.id = "membersContainer"
-        let list = document.createElement("p")
+
+
+
         socket.emit("activeUsers", room)
-        membersContainer.appendChild(list)
+
         document.getElementById("body").appendChild(membersContainer)
     } else {
         let membersContainer = document.createElement("div")
         membersContainer.id = "membersContainer"
-        let list = document.createElement("p")
+
+
         socket.emit("activeUsers", room)
-        membersContainer.appendChild(list)
         document.getElementById("body").appendChild(membersContainer)
     }
 }
@@ -68,16 +70,29 @@ function activeUsers() {
 
 socket.on("activeUsers", (data) => {
     document.getElementById("membersContainer")
-    
+
     let users = data.map((user) => {
         console.log(user.user)
-        
+
         let p = document.createElement("p")
         p.innerText = user.user
+        p.style.fontSize = "2em"
+
         document.getElementById("membersContainer").appendChild(p)
-        
+
     })
 
+    let exitList = document.createElement('button')
+    exitList.id = "exitList"
+    exitList.innerText = "close"
+    exitList.addEventListener('click', () => {
+        let container = document.getElementById('membersContainer')
+        container.style.animationName = "moveBack"
+        container.style.animationDuration = "1s"
+        container.style.top = "-50%"
+        setTimeout(() => { container.remove }, 1000)
+    })
+    document.getElementById('membersContainer').append(exitList)
     console.log(data)
 })
 
