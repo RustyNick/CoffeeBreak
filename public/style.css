@@ -8,28 +8,33 @@ body {
   font: 13px Helvetica, Arial;
   background-color: #3f3e38;
 }
-
-#logo{
-  width:20%;
-  max-width: 500px;
-  min-width:250px;
-  position:absolute;
-  color:whitesmoke;
-  font-family:Arial, Helvetica, sans-serif;
-  margin:auto;
-  top:10%;
-  z-index:2;
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
-video{
-  width:100%;
-  height:100%;
-  position:absolute;
-  object-fit:cover;
-  z-index:1;
+#logo {
+  width: 20%;
+  max-width: 500px;
+  min-width: 250px;
+  position: absolute;
+  color: whitesmoke;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: auto;
+  top: 10%;
+  z-index: 2;
+}
+video {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  object-fit: cover;
+  z-index: 1;
 }
 .inputContainer {
   position: fixed;
-  bottom:0;
+  bottom: 0;
   width: 100%;
 }
 
@@ -67,7 +72,7 @@ video{
 }
 
 #messages {
-  width:100%;
+  width: 100%;
   list-style-type: none;
   height: 100%;
   margin: 0;
@@ -80,8 +85,8 @@ video{
   padding: 5px 10px;
   background: burlywood;
   border-radius: 5px;
-  margin:10px;
-  margin-left:1%;
+  margin: 10px;
+  margin-left: 1%;
   color: #3f3e38;
 }
 
@@ -103,7 +108,7 @@ video{
   position: absolute;
   z-index: 9;
   width: 100%;
-  min-width:375px;
+  min-width: 375px;
   height: 100%;
   background-color: burlywood;
   display: flex;
@@ -111,50 +116,74 @@ video{
   align-items: center;
   flex-direction: column;
   padding: 120px;
-  margin:0px;
+  margin: 0px;
 }
 
-.loginstyle{
-  max-width:500px;
-  background: linear-gradient(#6f4e37,#946c50);
+.loginstyle {
+  max-width: 500px;
+  background: linear-gradient(#6f4e37, #946c50);
   display: flex;
   justify-content: center;
   flex-direction: column;
-  padding:20px;
+  padding: 20px;
   border-radius: 5px;
   z-index: 2;
   box-shadow: 5px 5px 30px 0px;
 }
 
-.loginstyle input{
+.loginstyle input,
+select {
   font-size: 2em;
-  padding:5px;
+  padding: 5px;
   margin: 5px 0px;
   outline: none;
-  border:none;
+  border: none;
 }
-.loginstyle button{
+
+.loginstyle button {
   font-size: 2em;
-  padding:5px;
+  padding: 5px;
   margin: 5px 0px;
   background-color: burlywood;
   transition: 0.5s;
-  border:none;
+  border: none;
 }
 
-.loginstyle button:hover{
-  background-color:#6f4e37;
+.loginstyle button:hover {
+  background-color: #6f4e37;
   border-radius: 15px;
   cursor: pointer;
-  color:#fffde4;
+  color: #fffde4;
+}
+.topBanner {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #6f4e37;
+  font-size: 2em;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  color: #fffde4;
+  text-align: center;
+  max-width: 50%;
+  min-width: 280px;
+}
+#roomName {
+  padding: 0px 20px;
+}
+#signout {
+  color: #fffde4;
+  margin: 5px;
+  font-size: 1em;
 }
 
-.chatBlock{
-  min-height:100vh;
-  background-color: #3f3e38;
+.chatBlock {
+  min-height: 100vh;
+  background: #3f3e38;
 }
 #showTyping {
-  color:#fffde4;
+  color: #fffde4;
   padding: 3px 10px;
 }
 
@@ -172,7 +201,15 @@ video{
   z-index: 0;
   object-fit: cover;
 }
+
 img {
   height: 100%;
   width: 100%;
+}
+
+#membersContainer {
+  position: absolute;
+  background: white;
+  top: 50vh;
+  left: 50vw;
 }
