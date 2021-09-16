@@ -2,10 +2,16 @@ let socket = io()
 let name = ""
 let room = ""
 let data = ""
+let bot = 'BaristaBot'
 let inputField = document.getElementById('message')
 
 let typingContainer = document.getElementById(showTyping)
 showTyping.style.display = "none"
+
+window.onload = () => {
+    appendJoinRoomInput()
+
+}
 
 document.getElementById("loginBtn").addEventListener("click", login)
 document.getElementById('loginBtn').addEventListener('mouseenter', () => {
@@ -23,12 +29,28 @@ document.getElementById('loginBtn').addEventListener('mouseleave', () => {
 
 })
 
+document.getElementById('signout').addEventListener('mouseenter', () => {
+
+    let btn = document.getElementById('signout')
+    btn.style.transition = "0.5s"
+    btn.innerHTML = `<i class="fas fa-door-open"></i>`
+
+})
+document.getElementById('signout').addEventListener('mouseleave', () => {
+
+    let btn = document.getElementById('signout')
+    btn.style.transition = "0.5s"
+    btn.innerHTML = `<i class="fas fa-door-closed">`
+
+})
+
 function collectData() {
     name = document.getElementById("inputName").value
-    room = document.getElementById("inputRoom").value
+    room = document.getElementById("roomInput").value
     password = document.getElementById("inputPass").value
 
     data = { name, room, password }
+    return data
 }
 
 function clearData() {
@@ -54,8 +76,9 @@ function showChat() {
     document.getElementById("loginBlock").style.display = "none"
 }
 
-socket.on("enterChat", () => {
+socket.on("enterChat", (data) => {
     showChat()
+    document.getElementById('roomName').innerText = data
 })
 
 function hideFunc() {
@@ -69,8 +92,11 @@ async function firstCommand() {
     let result = await response.json()
     let ingredients = "ingredients: " + result.drinks[0].strIngredient1 + ", " + result.drinks[0].strIngredient2 + ", " + result.drinks[0].strIngredient3 + ", " + result.drinks[0].strIngredient4
     let instruction = result.drinks[0].strInstructions
-    appendMessage(`${ingredients}`)
-    appendMessage(`${instruction}`)
+    /*     appendMessage(`${ingredients}`)
+        appendMessage(`${instruction}`) */
+    let cmd = ingredients + instruction
+    let number = "1"
+    socket.emit('cmdMessage', { number, room, cmd })
 }
 
 async function secondCommand() {
@@ -79,21 +105,30 @@ async function secondCommand() {
     let result = await response.json()
     let ingredients = "ingredients: " + result.drinks[4].strIngredient1 + ", " + result.drinks[0].strIngredient2 + ", " + result.drinks[0].strIngredient3 + ", " + result.drinks[0].strIngredient4 + ", " + result.drinks[0].strIngredient5 + ", " + result.drinks[0].strIngredient6
     let instruction = result.drinks[4].strInstructions
-    appendMessage(`${ingredients}`)
-    appendMessage(`${instruction}`)
+    /*     appendMessage(`${ingredients}`)
+        appendMessage(`${instruction}`) */
+    let cmd = ingredients + instruction
+    let number = "2"
+    socket.emit('cmdMessage', { number, room, cmd })
 }
 
 async function thirdCommand() {
     let response = await fetch("https://catfact.ninja/fact")
     let result = await response.json()
-    appendMessage(`${result.fact}`)
+    let cmd = result.fact
+    //appendMessage(`${result.fact}`)
+    let number = "3"
+    socket.emit('cmdMessage', { number, room, cmd })
 }
 
 async function fourthCommand() {
+    console.log('fourthCommand', room)
     let response = await fetch("https://api.sampleapis.com/coffee/hot")
     let result = await response.json()
     let randomNumber = Math.floor(Math.random() * 19) + 1;
-    socket.emit('message', result[randomNumber])
+    let cmd = result[randomNumber]
+    let number = "4"
+    socket.emit('cmdMessage', { number, room, cmd })
 }
 
 function keyDownFunction() {
@@ -101,20 +136,67 @@ function keyDownFunction() {
     socket.emit('showTyping', { name, room })
     if (inputField.value.includes("/") == true) {
         document.getElementById("commands").style.display = "block"
+    } else if (inputField.value.includes("") == true) {
+        document.getElementById("commands").style.display = "none"
     } else {
         document.getElementById("commands").style.display = "none"
 
     }
 
-    if (inputField.value.includes("/margarita") == true) {
-        firstCommand()
-    } else if (inputField.value.includes("/strawberry") == true) {
-        secondCommand()
-    } else if (inputField.value.includes("/cats") == true) {
-        thirdCommand()
-    } else if (inputField.value.includes("/coffee") == true) {
-        fourthCommand()
-    }
+    /*     if (inputField.value.includes("/margarita") == true) {
+            firstCommand()
+        } */
+}
+
+function appendCreateRoomInput() {
+    document.getElementById('roomDiv').innerText = ""
+
+    let div = document.createElement('div')
+
+    let roomInput = document.createElement('input')
+    roomInput.id = "roomInput"
+    roomInput.placeholder = "Room name..."
+    roomInput.style.width = "100%"
+
+    let togglebtn = document.createElement('button')
+    togglebtn.innerText = "Join a existing room"
+    togglebtn.style.width = "100%"
+    togglebtn.addEventListener('click', appendJoinRoomInput)
+
+    div.append(roomInput, togglebtn,)
+    document.getElementById('roomDiv').appendChild(div)
+}
+
+function appendJoinRoomInput() {
+    document.getElementById('roomDiv').innerText = ""
+    getRoomlist()
+    let div = document.createElement('div')
+
+    let roomList = document.createElement('select')
+    roomList.id = "roomInput"
+    roomList.style.width = "100%"
+
+    let togglebtn = document.createElement('button')
+    togglebtn.style.width = "100%"
+    togglebtn.innerText = "Create a Room"
+    togglebtn.addEventListener('click', appendCreateRoomInput)
+
+    div.append(roomList, togglebtn)
+    document.getElementById('roomDiv').appendChild(div)
+
+}
+socket.on('getRoom', (data) => {
+    let selectRoom = document.getElementById('roomInput')
+    let option = document.createElement('option')
+    option.value = data
+    option.text = data
+    selectRoom.append(option)
+
+    console.log()
+})
+
+function getRoomlist() {
+    socket.emit('getRoom')
 }
 
 document.addEventListener('keypress', function (e) {
@@ -122,6 +204,7 @@ document.addEventListener('keypress', function (e) {
         sendMessage()
     }
 })
+
 
 socket.on('showTyping', (data) => {
     showTyping.innerText = data.name + " is typing..."
@@ -140,8 +223,41 @@ socket.on('user-disconnected', data => {
 });
 
 socket.on('message', data => {
-    appendMessage(`${data.name}: ${data.message}`)
+    if (data.message == "/coffee") {
+        appendMessage(`${data.name}: ${data.message}`)
+        fourthCommand()
+
+    } else if (data.message == "/cats") {
+        console.log("in if and else")
+        appendMessage(`${data.name}: ${data.message}`)
+        thirdCommand()
+
+    } else if (data.message == "/strawberry") {
+        appendMessage(`${data.name}: ${data.message}`)
+        secondCommand()
+    } else if (data.message == "/margarita") {
+        appendMessage(`${data.name}: ${data.message}`)
+        firstCommand()
+    } else {
+        appendMessage(`${data.name}: ${data.message}`)
+    }
 })
+
+socket.on('cmdMessage', (data) => {
+
+    console.log("Recived from server", data)
+    let cmd = data.cmd
+    if (data.number === '1') {
+        appendMessage(`${bot}: ${cmd}`)
+    } else if (data.number === "2") {
+        appendMessage(`${bot}: ${cmd}`)
+    } else if (data.number === "3") {
+        appendMessage(`${bot}: ${cmd}`)
+    } else if (data.number === '4') {
+        appendMessage(`${bot}: ${cmd.title}, Desc: ${cmd.description} Ingredients: ${cmd.ingredients}`)
+    }
+})
+
 
 function sendMessage() {
     let input = document.getElementById('message')
@@ -163,10 +279,9 @@ function getDateAndTime() {
         dateTime = "Today at " + time
     }
 
-    /* setTimeout(getDateAndTime, 1000); */
     return dateTime
 }
-/* getDateAndTime() */
+
 
 
 function appendMessage(message) {

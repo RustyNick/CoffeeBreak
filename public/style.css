@@ -8,7 +8,12 @@ body {
   font: 13px Helvetica, Arial;
   background-color: #3f3e38;
 }
-
+.center{
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  flex-direction: column;
+}
 #logo{
   width:20%;
   max-width: 500px;
@@ -126,13 +131,14 @@ video{
   box-shadow: 5px 5px 30px 0px;
 }
 
-.loginstyle input{
+.loginstyle input, select{
   font-size: 2em;
   padding:5px;
   margin: 5px 0px;
   outline: none;
   border:none;
 }
+
 .loginstyle button{
   font-size: 2em;
   padding:5px;
@@ -148,10 +154,33 @@ video{
   cursor: pointer;
   color:#fffde4;
 }
+.topBanner{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color:#6f4e37;
+  font-size: 2em;
+  border-bottom-left-radius:50px;
+  border-bottom-right-radius: 50px;
+  color:#fffde4;
+  text-align: center;
+  max-width:50%;
+  min-width:280px;
+
+}
+#roomName{
+  padding:0px 20px;
+}
+#signout{
+  color:#fffde4;
+  margin:5px;
+  font-size:1em;
+}
 
 .chatBlock{
   min-height:100vh;
-  background-color: #3f3e38;
+  background:#3f3e38;
 }
 #showTyping {
   color:#fffde4;
