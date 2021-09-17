@@ -72,8 +72,6 @@ socket.on("activeUsers", (data) => {
     document.getElementById("membersContainer")
 
     let users = data.map((user) => {
-        console.log(user.user)
-
         let p = document.createElement("p")
         p.innerText = user.user
         p.style.fontSize = "2em"
@@ -93,7 +91,6 @@ socket.on("activeUsers", (data) => {
         setTimeout(() => { container.remove }, 1000)
     })
     document.getElementById('membersContainer').append(exitList)
-    console.log(data)
 })
 
 
@@ -167,7 +164,6 @@ async function thirdCommand() {
 }
 
 async function fourthCommand() {
-    console.log('fourthCommand', room)
     let response = await fetch("https://api.sampleapis.com/coffee/hot")
     let result = await response.json()
     let randomNumber = Math.floor(Math.random() * 19) + 1;
@@ -233,8 +229,6 @@ socket.on('getRoom', (data) => {
     option.value = data
     option.text = data
     selectRoom.append(option)
-
-    console.log()
 })
 
 function getRoomlist() {
@@ -268,35 +262,41 @@ socket.on('message', data => {
     if (data.message == "/coffee") {
         appendMessage(`${data.name}: ${data.message}`)
         fourthCommand()
-
+        document.getElementById("commands").style.display = "none"
+        return
     } else if (data.message == "/cats") {
-        console.log("in if and else")
         appendMessage(`${data.name}: ${data.message}`)
         thirdCommand()
-
+        document.getElementById("commands").style.display = "none"
+        return
     } else if (data.message == "/strawberry") {
         appendMessage(`${data.name}: ${data.message}`)
         secondCommand()
+        document.getElementById("commands").style.display = "none"
+        return
     } else if (data.message == "/margarita") {
         appendMessage(`${data.name}: ${data.message}`)
         firstCommand()
+        document.getElementById("commands").style.display = "none"
+        return
     } else {
         appendMessage(`${data.name}: ${data.message}`)
+        document.getElementById("commands").style.display = "none"
+        return
     }
 })
 
 socket.on('cmdMessage', (data) => {
 
-    console.log("Recived from server", data)
     let cmd = data.cmd
     if (data.number === '1') {
-        appendMessage(`${bot}: ${cmd}`)
+        appendBotMessage(`${cmd}`)
     } else if (data.number === "2") {
-        appendMessage(`${bot}: ${cmd}`)
+        appendBotMessage(`${cmd}`)
     } else if (data.number === "3") {
-        appendMessage(`${bot}: ${cmd}`)
+        appendBotMessage(`${cmd}`)
     } else if (data.number === '4') {
-        appendMessage(`${bot}: ${cmd.title}, Desc: ${cmd.description} Ingredients: ${cmd.ingredients}`)
+        appendBotMessage(`${cmd.title}, Desc: ${cmd.description} Ingredients: ${cmd.ingredients}`)
     }
 })
 

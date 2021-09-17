@@ -28,12 +28,12 @@ io.on('connection', (socket) => {
             if (room.roomName == data.room) {
                 if (room.password == data.password) {
                     socket.join(data.room)
-                    console.log(data.name)
                     room.socketId.push({ "userId": socket.id, "user": data.name })
                     io.to(room.roomName).emit("enterChat", room.roomName)
 
                 } else {
                     socket.emit("wrongPassword")
+                    return
                 }
 
             } else {
@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
                         socketId: [{ "userId": socket.id, "user": data.name }]
                     })
                     socket.join(data.room)
-                    socket.emit("enterChat")
+                    socket.emit("enterChat", rooms.roomName)
                 }
             }
         })
@@ -58,7 +58,6 @@ io.on('connection', (socket) => {
 
             let room = rooms[roomCheck]
 
-            console.log("lsit after disconnect" + rooms)
             rooms[roomCheck].socketId.splice(0, 1)
             delete socket.id
         })
@@ -67,9 +66,9 @@ io.on('connection', (socket) => {
             io.to(data.room).emit('message', data)
         })
 
-        socket.on("cmdMessage", (data) => {
-            io.to(data.room).emit('cmdMessage', data)
-        })
+        /*         socket.on("cmdMessage", (data) => {
+                    io.to(data.room).emit('cmdMessage', data)
+                }) */
 
 
         socket.on('showTyping', (data) => {
@@ -79,8 +78,6 @@ io.on('connection', (socket) => {
         socket.on("activeUsers", (data) => {
             let roomCheck = rooms.findIndex(rooms => rooms.roomName == data)
             let userList = rooms[roomCheck].socketId
-            console.log(userList)
-
             socket.emit("activeUsers", userList)
         })
 
@@ -92,6 +89,10 @@ io.on('connection', (socket) => {
             const roomList = rooms[i];
             socket.emit('getRoom', roomList.roomName)
         }
+    })
+
+    socket.on("cmdMessage", (data) => {
+        io.to(data.room).emit('cmdMessage', data)
     })
 
 })
