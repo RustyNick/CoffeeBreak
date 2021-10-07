@@ -63,7 +63,32 @@ io.on('connection', (socket) => {
         })
 
         socket.on("message", (data) => {
-            io.to(data.room).emit('message', data)
+            if (data.message == "/coffee") {
+
+                console.log('coffee')
+                io.to(data.room).emit('message', data)
+                return
+
+            } else if (data.message == "/strawberry") {
+                io.to(data.room).emit('message', data)
+                console.log('Strawberry')
+                return
+
+            } else if (data.message == "/cats") {
+                io.to(data.room).emit('message', data)
+                console.log('Cats')
+                return
+
+            } else if (data.message == "/margarita") {
+                io.to(data.room).emit('message', data)
+                console.log('Maragarita')
+                return
+
+            } else {
+                io.to(data.room).emit('message', data)
+                console.log('else')
+                return
+            }
         })
 
         /*         socket.on("cmdMessage", (data) => {

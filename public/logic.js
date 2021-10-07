@@ -164,6 +164,7 @@ async function thirdCommand() {
 }
 
 async function fourthCommand() {
+    console.log('coffee function')
     let response = await fetch("https://api.sampleapis.com/coffee/hot")
     let result = await response.json()
     let randomNumber = Math.floor(Math.random() * 19) + 1;
@@ -259,36 +260,15 @@ socket.on('user-disconnected', data => {
 });
 
 socket.on('message', data => {
-    if (data.message == "/coffee") {
-        appendMessage(`${data.name}: ${data.message}`)
-        fourthCommand()
-        document.getElementById("commands").style.display = "none"
-        return
-    } else if (data.message == "/cats") {
-        appendMessage(`${data.name}: ${data.message}`)
-        thirdCommand()
-        document.getElementById("commands").style.display = "none"
-        return
-    } else if (data.message == "/strawberry") {
-        appendMessage(`${data.name}: ${data.message}`)
-        secondCommand()
-        document.getElementById("commands").style.display = "none"
-        return
-    } else if (data.message == "/margarita") {
-        appendMessage(`${data.name}: ${data.message}`)
-        firstCommand()
-        document.getElementById("commands").style.display = "none"
-        return
-    } else {
-        appendMessage(`${data.name}: ${data.message}`)
-        document.getElementById("commands").style.display = "none"
-        return
-    }
+    appendMessage(`${data.name}: ${data.message}`)
+    document.getElementById("commands").style.display = "none"
+    return
 })
 
 socket.on('cmdMessage', (data) => {
 
     let cmd = data.cmd
+    console.log(cmd)
     if (data.number === '1') {
         appendBotMessage(`${cmd}`)
     } else if (data.number === "2") {
@@ -305,7 +285,22 @@ function sendMessage() {
     let input = document.getElementById('message')
     const message = input.value
     input.value = ""
+
+    if (message === '/coffee') {
+        fourthCommand()
+        return
+    } else if (message === '/margarita') {
+        firstCommand()
+
+    } else if (message === '/strawberry') {
+        secondCommand()
+
+    } else if (message === '/cats') {
+        thirdCommand()
+
+    }
     socket.emit('message', { name, message, room })
+
 }
 
 function getDateAndTime() {

@@ -27,6 +27,7 @@ type the snippet below in your terminal in visual studio code.
 # incase it does not start try this in the terminal
     - node index.js 
 
-##  Author & Github
+##  Author & Github & trello
 Niklas & Tim
 https://github.com/RustyNick/CoffeeBreak
+https://trello.com/b/tHTBGYlx/coffe-break-kanban
