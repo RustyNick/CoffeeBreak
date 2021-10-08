@@ -164,13 +164,13 @@ async function thirdCommand() {
 }
 
 async function fourthCommand() {
-    console.log('coffee function')
     let response = await fetch("https://api.sampleapis.com/coffee/hot")
     let result = await response.json()
     let randomNumber = Math.floor(Math.random() * 19) + 1;
     let cmd = result[randomNumber]
     let number = "4"
     socket.emit('cmdMessage', { number, room, cmd })
+    document.getElementById("commands").style.display = "none"
 }
 
 function keyDownFunction() {

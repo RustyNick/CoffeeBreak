@@ -71,17 +71,17 @@ io.on('connection', (socket) => {
 
             } else if (data.message == "/strawberry") {
                 io.to(data.room).emit('message', data)
-                console.log('Strawberry')
+
                 return
 
             } else if (data.message == "/cats") {
                 io.to(data.room).emit('message', data)
-                console.log('Cats')
+
                 return
 
             } else if (data.message == "/margarita") {
                 io.to(data.room).emit('message', data)
-                console.log('Maragarita')
+
                 return
 
             } else {
@@ -90,10 +90,6 @@ io.on('connection', (socket) => {
                 return
             }
         })
-
-        /*         socket.on("cmdMessage", (data) => {
-                    io.to(data.room).emit('cmdMessage', data)
-                }) */
 
 
         socket.on('showTyping', (data) => {
